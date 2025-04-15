@@ -63,15 +63,15 @@ const Header = () => {
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
               <Link key={item.name} href={item.href}>
-                <a
-                  className={`px-3 py-2 text-sm font-medium ${
+                <div
+                  className={`px-3 py-2 text-sm font-medium cursor-pointer ${
                     isActive(item.href)
                       ? 'text-neutral-900 border-b-2 border-primary'
                       : 'text-neutral-600 hover:text-primary'
                   }`}
                 >
                   {item.name}
-                </a>
+                </div>
               </Link>
             ))}
           </nav>
@@ -140,8 +140,8 @@ const Header = () => {
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
-              <a
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
+              <div
+                className={`block px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
                   isActive(item.href)
                     ? 'bg-primary-light text-white'
                     : 'text-neutral-600 hover:bg-neutral-200'
@@ -149,7 +149,7 @@ const Header = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
-              </a>
+              </div>
             </Link>
           ))}
         </div>

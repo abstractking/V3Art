@@ -1,0 +1,57 @@
+[11:57:24.734] Cloning github.com/abstractking/V3Art (Branch: main, Commit: edb8f70)
+[11:57:24.779] Skipping build cache, deployment was triggered without cache.
+[11:57:25.944] Cloning completed: 1.210s
+[11:57:26.461] Running build in Washington, D.C., USA (East) – iad1
+[11:57:27.002] Running "vercel build"
+[11:57:27.386] Vercel CLI 41.6.0
+[11:57:28.033] Installing dependencies...
+[11:57:30.846] npm warn deprecated yaeti@0.0.6: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+[11:57:31.425] npm warn deprecated uuid@2.0.1: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+[11:57:32.193] npm warn deprecated mkdirp-promise@5.0.1: This package is broken and no longer maintained. 'mkdirp' itself supports promises now, please switch to that.
+[11:57:32.689] npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+[11:57:32.700] npm warn deprecated har-validator@5.1.5: this library is no longer supported
+[11:57:33.483] npm warn deprecated multibase@0.6.1: This module has been superseded by the multiformats module
+[11:57:33.706] npm warn deprecated multicodec@0.5.7: This module has been superseded by the multiformats module
+[11:57:34.663] npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+[11:57:34.685] npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+[11:57:35.216] npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+[11:57:35.265] npm warn deprecated multicodec@1.0.4: This module has been superseded by the multiformats module
+[11:57:35.417] npm warn deprecated multibase@0.7.0: This module has been superseded by the multiformats module
+[11:57:36.146] npm warn deprecated cids@0.7.5: This module has been superseded by the multiformats module
+[11:57:40.674] 
+[11:57:40.674] added 820 packages in 12s
+[11:57:40.675] 
+[11:57:40.675] 118 packages are looking for funding
+[11:57:40.675]   run `npm fund` for details
+[11:57:40.735] Running "npm run build"
+[11:57:40.852] 
+[11:57:40.853] > rest-express@1.0.0 build
+[11:57:40.853] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[11:57:40.853] 
+[11:57:41.227] [36mvite v5.4.14 [32mbuilding for production...[36m[39m
+[11:57:41.281] transforming...
+[11:57:41.538] Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+[11:57:41.538]   npx update-browserslist-db@latest
+[11:57:41.539]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[11:57:47.723] [32m✓[39m 2331 modules transformed.
+[11:57:48.268] rendering chunks...
+[11:57:48.280] computing gzip size...
+[11:57:48.304] [2m../dist/public/[22m[32mindex.html                 [39m[1m[2m  1.85 kB[22m[1m[22m[2m │ gzip:   0.75 kB[22m
+[11:57:48.305] [2m../dist/public/[22m[2massets/[22m[35mindex-DFRRvWah.css  [39m[1m[2m 63.87 kB[22m[1m[22m[2m │ gzip:  11.13 kB[22m
+[11:57:48.305] [2m../dist/public/[22m[2massets/[22m[36mindex-CVmEqcV5.js   [39m[1m[33m805.65 kB[39m[22m[2m │ gzip: 252.81 kB[22m
+[11:57:48.305] [33m
+[11:57:48.305] (!) Some chunks are larger than 500 kB after minification. Consider:
+[11:57:48.305] - Using dynamic import() to code-split the application
+[11:57:48.305] - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+[11:57:48.305] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[11:57:48.306] [32m✓ built in 7.06s[39m
+[11:57:48.356] 
+[11:57:48.357]   dist/index.js  16.9kb
+[11:57:48.357] 
+[11:57:48.357] ⚡ Done in 7ms
+[11:57:48.433] Build Completed in /vercel/output [20s]
+[11:57:48.457] Deploying outputs...
+[11:57:49.647] 
+[11:57:49.992] Deployment completed
+[11:58:07.039] Uploading build cache [93.13 MB]...
+[11:58:08.779] Build cache uploaded: 1.742s

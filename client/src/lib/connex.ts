@@ -1,4 +1,5 @@
-import { Framework } from '@vechain/connex';
+// Importing Connex correctly
+import Connex from '@vechain/connex';
 
 // Mainnet node URL
 const MAINNET_NODE = 'https://mainnet.veblocks.net/';
@@ -8,19 +9,43 @@ const TESTNET_NODE = 'https://testnet.veblocks.net/';
 // Use testnet for development
 const NODE_URL = import.meta.env.PROD ? MAINNET_NODE : TESTNET_NODE;
 
-// Create a Connex instance
-let connex: Framework | null = null;
+// Define a type for our connex instance
+type ConnexInstance = InstanceType<typeof Connex>;
 
-// Initialize Connex when in browser environment
-if (typeof window !== 'undefined') {
+// Create a Connex instance
+let connex: ConnexInstance | null = null;
+
+// Initialize Connex only when in browser environment
+const initConnex = (): ConnexInstance | null => {
+  if (typeof window === 'undefined') return null;
+  
+  // First check if Connex is already available in window (browser extension)
+  if ((window as any).connex) {
+    console.log('Using Connex from browser extension');
+    return (window as any).connex;
+  } 
+  
   try {
-    connex = new Framework({
+    // Try to create a solo instance for development
+    console.log('Creating solo Connex instance');
+    return new Connex({
       node: NODE_URL,
       network: import.meta.env.PROD ? 'main' : 'test'
     });
   } catch (error) {
     console.error('Failed to initialize Connex:', error);
+    return null;
   }
+};
+
+// Initialize on import, but gracefully handle errors
+try {
+  if (typeof window !== 'undefined') {
+    connex = initConnex();
+  }
+} catch (e) {
+  console.error('Error initializing connex:', e);
+  connex = null;
 }
 
 export { connex };
