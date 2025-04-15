@@ -11,6 +11,11 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        vechain: {
+          DEFAULT: "#FF0420",
+          dark: "#CC0319",
+          light: "#FF1A33"
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

@@ -16,12 +16,12 @@ const Logo: FC<LogoProps> = ({ size = 'md', className = '' }) => {
   return (
     <Link href="/">
       <div className="flex items-center cursor-pointer">
-        <div className={`${sizeClasses[size]} bg-primary rounded-full flex items-center justify-center text-white font-bold ${className}`}>
-          V
+        <div className={`${sizeClasses[size]} rounded-full flex items-center justify-center font-bold ${className} dark:text-white`}>
+          <span className="text-xl">Ve<span className="text-red-500 dark:text-red-400">Collab</span></span>
         </div>
         <div className="ml-3">
-          <h1 className="text-xl font-bold text-neutral-900">VeChain Art Gallery</h1>
-          <p className="text-xs text-neutral-500">Blockchain-Powered Digital Art</p>
+          <h1 className="text-xl font-bold text-neutral-900 dark:text-white">VeCollab</h1>
+          <p className="text-xs text-neutral-500 dark:text-gray-400">Blockchain-Powered Digital Art</p>
         </div>
       </div>
     </Link>
