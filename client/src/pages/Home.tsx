@@ -41,7 +41,7 @@ const Home: FC = () => {
               <span className="hero-accent">NFTs</span> on VeChain
             </h1>
             <p className="hero-subtitle">
-              The premier decentralized marketplace for VeChain NFTs. Buy, sell, and collect unique digital assets powered by VeChain blockchain technology.
+              The premier platform for verified World of V artworks on VeChain. Submit your NFT collection for manual verification by our curation team and showcase your verified digital assets.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/explore">
@@ -51,7 +51,7 @@ const Home: FC = () => {
               </Link>
               <Link href="/submit">
                 <Button className="button-secondary">
-                  Submit NFT
+                  Verify Your Art
                 </Button>
               </Link>
             </div>

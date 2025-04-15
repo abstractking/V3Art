@@ -107,9 +107,9 @@ const Submit: FC = () => {
                 <CheckCircle className="h-10 w-10 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl text-center">Submission Received!</CardTitle>
+            <CardTitle className="text-2xl text-center">Verification Request Received!</CardTitle>
             <CardDescription className="text-center">
-              Thank you for submitting your NFT to VeCollab
+              Thank you for submitting your World of V art for verification
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
@@ -120,9 +120,9 @@ const Submit: FC = () => {
             <div className="border rounded-lg p-4 bg-secondary/30 mb-6">
               <p className="font-medium">Next Steps:</p>
               <ol className="text-left list-decimal pl-6 mt-2 space-y-2 text-muted-foreground">
-                <li>Our verification team will review your submission</li>
-                <li>If verified, your NFT will be displayed in our gallery</li>
-                <li>You'll receive a notification when your NFT is live</li>
+                <li>Our team will manually check your World of V art link</li>
+                <li>We'll verify ownership against your wallet address</li>
+                <li>If authenticated, your NFT will be displayed in our gallery</li>
               </ol>
             </div>
           </CardContent>
