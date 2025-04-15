@@ -61,30 +61,15 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <Logo />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link key={item.name} href={item.href}>
-                <div
-                  className={`px-3 py-2 text-sm font-medium cursor-pointer ${
-                    isActive(item.href)
-                      ? 'text-foreground border-b-2 border-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  {item.name}
-                </div>
-              </Link>
-            ))}
-            <a 
-              href="https://github.com/your-repo/docs" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="px-3 py-2 text-sm font-medium cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
-            >
-              GitDoc
-            </a> {/* Added GitDoc link */}
-          </nav>
+          {/* Hamburger Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-foreground focus:outline-none"
+          >
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
+          </button>
 
           {/* Search Bar */}
           <div className="hidden md:flex items-center relative max-w-md w-full mx-4">
@@ -166,9 +151,20 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:hidden border-t border-border`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      {/* Navigation Menu (Mobile & Desktop) */}
+      <div className={`${mobileMenuOpen ? 'block' : 'hidden'} fixed inset-0 z-50 bg-background/95 backdrop-blur-sm`}>
+        <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-background shadow-xl border-l border-border">
+          <div className="flex justify-end p-4">
+            <button 
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-foreground focus:outline-none"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="px-4 py-2 space-y-1">
           {/* Mobile Search */}
           <div className="px-3 py-2">
             <div className="relative">
@@ -184,10 +180,10 @@ const Header = () => {
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
               <div
-                className={`block px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
+                className={`block px-4 py-3 text-lg font-medium cursor-pointer border-b border-border ${
                   isActive(item.href)
-                    ? 'bg-primary text-white'
-                    : 'text-foreground hover:bg-secondary'
+                    ? 'text-primary'
+                    : 'text-foreground hover:text-primary'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
