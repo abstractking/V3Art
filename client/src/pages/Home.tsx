@@ -37,11 +37,11 @@ const Home: FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-6">
             <h1 className="hero-title">
-              Discover, Collect & Sell<br/>
-              <span className="hero-accent">NFTs</span> on VeChain
+              Water Artist, Get $B3TR<br/>
+              <span className="hero-accent">1 of 1</span> NFTs on VeChain
             </h1>
             <p className="hero-subtitle">
-              The premier platform for verified World of V artworks on VeChain. Submit your NFT collection for manual verification by our curation team and showcase your verified digital assets.
+              The premier platform for verified World of V artworks on VeChain. Submit your 1 of 1 NFT collectables for manual verification by our curation team. Water Artist Recieve B3TR! 
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/explore">
@@ -197,9 +197,9 @@ const Home: FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-xl font-medium mb-2">Energy Efficient</h3>
+            <h3 className="text-xl font-medium mb-2">Reward For Support</h3>
             <p className="text-muted-foreground">
-              VeChain's Proof-of-Authority consensus mechanism is environmentally friendly, using minimal computational resources.
+              Support & Water Artist Recieve B3TR! Support Having Creatives Flourish, And Get Rewarded For It!
             </p>
           </div>
         </div>
