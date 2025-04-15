@@ -4,25 +4,28 @@ import { Link } from 'wouter';
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  showTagline?: boolean;
 }
 
-const Logo: FC<LogoProps> = ({ size = 'md', className = '' }) => {
+const Logo: FC<LogoProps> = ({ size = 'md', className = '', showTagline = true }) => {
   const sizeClasses = {
-    sm: 'h-8 w-8',
-    md: 'h-10 w-10',
-    lg: 'h-12 w-12',
+    sm: 'h-7 w-7',
+    md: 'h-9 w-9',
+    lg: 'h-11 w-11',
   };
 
   return (
     <Link href="/">
       <div className="flex items-center cursor-pointer">
-        <div className={`${sizeClasses[size]} bg-primary rounded-full flex items-center justify-center text-white font-bold ${className}`}>
-          V
-        </div>
-        <div className="ml-3">
-          <h1 className="text-xl font-bold text-neutral-900">VeChain Art Gallery</h1>
-          <p className="text-xs text-neutral-500">Blockchain-Powered Digital Art</p>
-        </div>
+        <span className="font-bold text-2xl">
+          <span className="text-white">Ve</span>
+          <span className="text-primary">Collab</span>
+        </span>
+        {showTagline && (
+          <div className="hidden md:block ml-3">
+            <p className="text-xs text-muted-foreground">Blockchain-Powered NFT Marketplace</p>
+          </div>
+        )}
       </div>
     </Link>
   );

@@ -6,7 +6,7 @@ import ArtworkCard from '@/components/artwork/ArtworkCard';
 import ArtistCard from '@/components/artist/ArtistCard';
 import ArtworkDetailModal from '@/components/artwork/ArtworkDetailModal';
 import { Artist, Artwork } from '@shared/schema';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ImageIcon } from 'lucide-react';
 
 const Home: FC = () => {
   const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(null);
@@ -33,36 +33,71 @@ const Home: FC = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-neutral-950 text-white">
-        <div className="absolute inset-0 overflow-hidden opacity-30">
-          <div className="w-full h-full bg-gradient-to-r from-primary to-secondary opacity-70"></div>
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="max-w-3xl">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Digital Art Powered by VeChain</h2>
-            <p className="text-xl text-neutral-200 mb-8">Discover, collect, and submit artwork secured by blockchain technology</p>
-            <div className="flex flex-wrap gap-4">
+      <section className="hero-section">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 space-y-6">
+            <h1 className="hero-title">
+              Discover, Collect & Sell<br/>
+              <span className="hero-accent">NFTs</span> on VeChain
+            </h1>
+            <p className="hero-subtitle">
+              The premier decentralized marketplace for VeChain NFTs. Buy, sell, and collect unique digital assets powered by VeChain blockchain technology.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-4">
               <Link href="/explore">
-                <Button className="bg-secondary hover:bg-secondary-dark text-white px-6 py-3 rounded-md font-medium shadow-lg transition-colors">
-                  Explore Gallery
+                <Button className="button-primary">
+                  Explore NFTs
                 </Button>
               </Link>
               <Link href="/submit">
-                <Button variant="outline" className="bg-white text-neutral-900 hover:bg-neutral-100 px-6 py-3 rounded-md font-medium shadow-lg transition-colors">
-                  Submit Artwork
+                <Button className="button-secondary">
+                  Create NFT
                 </Button>
               </Link>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-5">
+            <div className="relative">
+              <div className="bg-[#161F37] p-2 rounded-xl shadow-xl overflow-hidden">
+                {artworks && artworks.length > 0 ? (
+                  <div className="aspect-square rounded-lg overflow-hidden bg-black/20 relative">
+                    <img 
+                      src={artworks[0].imageUrl} 
+                      alt={artworks[0].title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-4">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h3 className="font-bold text-white">{artworks[0].title}</h3>
+                          <div className="text-xs text-white/70">@{findArtistForArtwork(artworks[0].artistId)?.name}</div>
+                        </div>
+                        <div className="flex items-center bg-primary/20 px-2 py-1 rounded text-white text-sm">
+                          <span className="font-bold">{artworks[0].price} VET</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="aspect-square rounded-lg overflow-hidden bg-black/20 flex items-center justify-center">
+                    <ImageIcon className="h-16 w-16 text-white/20" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Artworks Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold">Featured Artworks</h2>
+          <h2 className="text-2xl font-bold">Featured NFTs</h2>
           <Link href="/explore">
-            <a className="text-primary hover:text-primary-dark font-medium">View All</a>
+            <div className="text-primary hover:text-primary/90 font-medium cursor-pointer">
+              View All
+            </div>
           </Link>
         </div>
 
@@ -87,18 +122,20 @@ const Home: FC = () => {
             })}
           </div>
         ) : (
-          <div className="text-center py-12 bg-neutral-50 rounded-lg">
-            <p className="text-neutral-600">No artworks available at the moment.</p>
+          <div className="text-center py-12 bg-secondary rounded-lg">
+            <p className="text-muted-foreground">No NFTs available at the moment.</p>
           </div>
         )}
       </section>
 
       {/* Featured Artists Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-neutral-50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-secondary/30 dark:bg-secondary/10">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold">Featured Artists</h2>
           <Link href="/artists">
-            <a className="text-primary hover:text-primary-dark font-medium">View All</a>
+            <div className="text-primary hover:text-primary/90 font-medium cursor-pointer">
+              View All
+            </div>
           </Link>
         </div>
 
@@ -113,67 +150,58 @@ const Home: FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-white rounded-lg">
-            <p className="text-neutral-600">No artists available at the moment.</p>
+          <div className="text-center py-12 bg-card rounded-lg">
+            <p className="text-muted-foreground">No artists available at the moment.</p>
           </div>
         )}
       </section>
 
       {/* VeChain Blockchain Integration Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-neutral-950 text-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Powered by VeChain</h2>
-          <p className="max-w-2xl mx-auto text-neutral-300">
-            Our platform leverages VeChain's enterprise-grade public blockchain for digital art authentication,
+          <h2 className="text-3xl font-bold mb-4">Powered by <span className="text-primary">VeChain</span></h2>
+          <p className="max-w-2xl mx-auto text-muted-foreground">
+            Our platform leverages VeChain's enterprise-grade public blockchain for NFT authentication,
             ownership tracking, and secure transactions.
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-neutral-900 p-6 rounded-lg">
-            <div className="h-12 w-12 bg-primary-light rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-card p-6 rounded-xl shadow-sm card-hover">
+            <div className="h-12 w-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
             <h3 className="text-xl font-medium mb-2">Secure Authentication</h3>
-            <p className="text-neutral-400">
-              Every artwork is securely stored with cryptographic proof of authenticity and ownership on the VeChain blockchain.
+            <p className="text-muted-foreground">
+              Every NFT is securely stored with cryptographic proof of authenticity and ownership on the VeChain blockchain.
             </p>
           </div>
           
-          <div className="bg-neutral-900 p-6 rounded-lg">
-            <div className="h-12 w-12 bg-primary-light rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-card p-6 rounded-xl shadow-sm card-hover">
+            <div className="h-12 w-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
               </svg>
             </div>
             <h3 className="text-xl font-medium mb-2">Transparent Transactions</h3>
-            <p className="text-neutral-400">
+            <p className="text-muted-foreground">
               All sales and transfers are recorded on the blockchain, providing complete transparency and provenance tracking.
             </p>
           </div>
           
-          <div className="bg-neutral-900 p-6 rounded-lg">
-            <div className="h-12 w-12 bg-primary-light rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="bg-card p-6 rounded-xl shadow-sm card-hover">
+            <div className="h-12 w-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <h3 className="text-xl font-medium mb-2">Energy Efficient</h3>
-            <p className="text-neutral-400">
+            <p className="text-muted-foreground">
               VeChain's Proof-of-Authority consensus mechanism is environmentally friendly, using minimal computational resources.
             </p>
           </div>
-        </div>
-        
-        <div className="mt-12 text-center">
-          <a href="https://www.vechain.org" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-primary-light hover:text-white font-medium">
-            Learn more about VeChain technology
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </a>
         </div>
       </section>
 
