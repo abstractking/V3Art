@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { useWeb3 } from '@/hooks/use-web3';
 import Logo from '@/components/ui/logo';
 import { Button } from '@/components/ui/button';
-import { Loader2, AlertCircle, LogOut, Search } from 'lucide-react';
+import { Loader2, AlertCircle, LogOut, Search, Coins } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +45,7 @@ const Header = () => {
     { name: 'Explore', href: '/explore' },
     { name: 'Submit', href: '/submit' },
     { name: 'Artists', href: '/artists' },
+    { name: 'Dashboard', href: '/dashboard' },
   ];
 
   const isActive = (path: string) => {
@@ -108,6 +109,15 @@ const Header = () => {
                   <DropdownMenuItem className="cursor-default">
                     Balance: {balance ? `${parseFloat(balance).toFixed(2)} VET` : 'Loading...'}
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <Link href="/dashboard">
+                    <DropdownMenuItem>
+                      <div className="flex items-center">
+                        <Coins className="h-4 w-4 mr-2" />
+                        My Dashboard
+                      </div>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleDisconnect} className="text-red-500">
                     <LogOut className="h-4 w-4 mr-2" />

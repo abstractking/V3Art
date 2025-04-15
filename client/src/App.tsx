@@ -10,6 +10,7 @@ import ArtistDetail from "@/pages/ArtistDetail";
 import ArtworkDetail from "@/pages/ArtworkDetail";
 import Submit from "@/pages/Submit";
 import Documentation from "@/pages/Documentation";
+import CollectorDashboard from "@/pages/CollectorDashboard";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Web3Provider } from "@/hooks/use-web3";
@@ -27,6 +28,7 @@ function Router() {
           <Route path="/artworks/:id" component={ArtworkDetail} />
           <Route path="/submit" component={Submit} />
           <Route path="/docs" component={Documentation} />
+          <Route path="/dashboard" component={CollectorDashboard} />
           <Route component={NotFound} />
         </Switch>
       </main>
