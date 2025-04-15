@@ -1,0 +1,88 @@
+The error message you're encountering indicates that there is an "Unterminated JSX contents" issue in your Header.tsx file at line 219. This typically means that there is a missing closing tag or been a syntax error in your JSX.
+
+Here is a likely correction for your Header.tsx component around that area; ensure all JSX elements are properly closed:
+
+const Header = () => {
+  const [location] = useLocation();
+  const { walletAddress, isConnected, balance, isConnecting, error, connect, disconnect } = useWeb3();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { toast } = useToast();
+  const handleConnectWallet = async () => {
+    try {
+      await connect();
+    } catch (err) {
+      toast({
+        title: "Connection Failed",
+        description: "Could not connect to VeChain wallet",
+        variant: "destructive",
+      });
+    }
+  };
+  const handleDisconnect = () => {
+    disconnect();
+    toast({
+      title: "Wallet Disconnected",
+      description: "Your wallet has been disconnected successfully",
+    });
+  };
+  const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'Explore', href: '/explore' },
+    { name: 'Submit', href: '/submit' },
+    { name: 'Artists', href: '/artists' },
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'About', href: '/about' },
+  ];
+  const isActive = (path: string) => {
+    if (path === '/' && location === '/') return true;
+    if (path !== '/' && location.startsWith(path)) return true;
+    return false;
+  };
+  return (
+    <header className="bg-background dark:bg-[#0A0E1A] border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <Logo />
+          {navigation.map((item) => (
+            <Link key={item.name} href={item.href}>
+              <div
+                className={`block px-4 py-3 text-lg font-medium cursor-pointer border-b border-border ${
+                  isActive(item.href)
+                    ? 'text-primary'
+                    : 'text-foreground hover:text-primary'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.name}
+              </div>
+            </Link>
+          ))}
+          <a 
+            href="https://github.com/your-repo/docs" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="block px-3 py-2 rounded-md text-base font-medium cursor-pointer text-muted-foreground hover:bg-secondary"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            GitDoc
+          </a>
+        </div>
+      </div>
+      {/* Display error if any */}
+      {error && (
+        <div className="bg-destructive/10 border-l-4 border-destructive p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+export default Header;
+Make sure to thoroughly check the rest of the JSX for properly closed tags to prevent similar errors. If you have any more issues or need further assistance, feel free to ask!
