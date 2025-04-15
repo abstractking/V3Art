@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import TierProgressTracker from '@/components/collector/TierProgressTracker';
 import {
   Coins,
   Droplets,
@@ -36,6 +37,7 @@ const CollectorDashboard: FC = () => {
     verifiedNFTs: 9,
     supportedArtists: 6,
     level: 2,
+    tierLevel: 'silver', // bronze, silver, gold, platinum, diamond
     levelProgress: 68,
     nextLevelThreshold: 250,
     achievements: [
@@ -187,6 +189,16 @@ const CollectorDashboard: FC = () => {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-6">
+          {/* Tier Progress Tracker */}
+          <div className="mb-8">
+            <TierProgressTracker 
+              currentTier={collectorData.tierLevel as 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond'}
+              b3trEarned={collectorData.b3trEarned}
+              nftsVerified={collectorData.verifiedNFTs}
+              artistsSupported={collectorData.supportedArtists}
+            />
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
               <CardHeader className="pb-3">
