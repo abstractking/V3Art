@@ -2,7 +2,8 @@ import {
   users, type User, type InsertUser,
   artists, type Artist, type InsertArtist,
   artworks, type Artwork, type InsertArtwork,
-  artworkSubmissions, type ArtworkSubmission, type InsertArtworkSubmission
+  artworkSubmissions, type ArtworkSubmission, type InsertArtworkSubmission,
+  nftSubmissions, type NftSubmission, type InsertNftSubmission
 } from "@shared/schema";
 
 export interface IStorage {
@@ -28,6 +29,12 @@ export interface IStorage {
   getSubmission(id: number): Promise<ArtworkSubmission | undefined>;
   getAllSubmissions(): Promise<ArtworkSubmission[]>;
   updateSubmissionStatus(id: number, status: string): Promise<ArtworkSubmission>;
+  
+  // NFT Submission methods
+  submitNft(submission: InsertNftSubmission): Promise<NftSubmission>;
+  getNftSubmission(id: number): Promise<NftSubmission | undefined>;
+  getAllNftSubmissions(): Promise<NftSubmission[]>;
+  updateNftSubmissionStatus(id: number, status: string): Promise<NftSubmission>;
 }
 
 export class MemStorage implements IStorage {
@@ -35,20 +42,24 @@ export class MemStorage implements IStorage {
   private artists: Map<number, Artist>;
   private artworks: Map<number, Artwork>;
   private submissions: Map<number, ArtworkSubmission>;
+  private nftSubmissions: Map<number, NftSubmission>;
   private userId: number;
   private artistId: number;
   private artworkId: number;
   private submissionId: number;
+  private nftSubmissionId: number;
 
   constructor() {
     this.users = new Map();
     this.artists = new Map();
     this.artworks = new Map();
     this.submissions = new Map();
+    this.nftSubmissions = new Map();
     this.userId = 1;
     this.artistId = 1;
     this.artworkId = 1;
     this.submissionId = 1;
+    this.nftSubmissionId = 1;
 
     // Initialize with sample data
     this.initializeSampleData();
@@ -170,6 +181,42 @@ export class MemStorage implements IStorage {
     };
     
     this.submissions.set(id, updatedSubmission);
+    return updatedSubmission;
+  }
+  
+  // NFT Submission methods
+  async submitNft(insertSubmission: InsertNftSubmission): Promise<NftSubmission> {
+    const id = this.nftSubmissionId++;
+    const submission: NftSubmission = { 
+      ...insertSubmission, 
+      id,
+      status: "pending",
+      createdAt: new Date()
+    };
+    this.nftSubmissions.set(id, submission);
+    return submission;
+  }
+
+  async getNftSubmission(id: number): Promise<NftSubmission | undefined> {
+    return this.nftSubmissions.get(id);
+  }
+
+  async getAllNftSubmissions(): Promise<NftSubmission[]> {
+    return Array.from(this.nftSubmissions.values());
+  }
+
+  async updateNftSubmissionStatus(id: number, status: string): Promise<NftSubmission> {
+    const submission = await this.getNftSubmission(id);
+    if (!submission) {
+      throw new Error(`NFT Submission with id ${id} not found`);
+    }
+    
+    const updatedSubmission = {
+      ...submission,
+      status
+    };
+    
+    this.nftSubmissions.set(id, updatedSubmission);
     return updatedSubmission;
   }
 

@@ -30,7 +30,7 @@ import { Loader2, CheckCircle, LinkIcon, Shield } from 'lucide-react';
 
 // Define the schema for the submission form
 const nftSubmissionSchema = z.object({
-  veWorldLink: z.string().url({ message: "Please enter a valid VeWorld URL" }),
+  worldOfVLink: z.string().url({ message: "Please enter a valid World of V URL" }),
   walletAddress: z.string().min(1, { message: "VeChain wallet address is required" }),
   terms: z.boolean().refine(val => val === true, {
     message: "You must agree to the terms and conditions",

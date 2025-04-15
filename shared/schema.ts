@@ -50,7 +50,7 @@ export const artworkSubmissions = pgTable("artwork_submissions", {
 
 export const nftSubmissions = pgTable("nft_submissions", {
   id: serial("id").primaryKey(),
-  veWorldLink: text("veworld_link").notNull(),
+  worldOfVLink: text("worldofv_link").notNull(),
   walletAddress: text("wallet_address").notNull(),
   status: text("status").default("pending"),
   createdAt: timestamp("created_at").defaultNow(),
@@ -94,7 +94,7 @@ export const insertArtworkSubmissionSchema = createInsertSchema(artworkSubmissio
 });
 
 export const insertNftSubmissionSchema = createInsertSchema(nftSubmissions).pick({
-  veWorldLink: true,
+  worldOfVLink: true,
   walletAddress: true,
 });
 
@@ -111,6 +111,9 @@ export type InsertArtwork = z.infer<typeof insertArtworkSchema>;
 export type ArtworkSubmission = typeof artworkSubmissions.$inferSelect;
 export type InsertArtworkSubmission = z.infer<typeof insertArtworkSubmissionSchema>;
 
+export type NftSubmission = typeof nftSubmissions.$inferSelect;
+export type InsertNftSubmission = z.infer<typeof insertNftSubmissionSchema>;
+
 // Extended validation schemas
 export const artworkSubmissionFormSchema = insertArtworkSubmissionSchema.extend({
   email: z.string().email("Please enter a valid email address"),
@@ -119,4 +122,11 @@ export const artworkSubmissionFormSchema = insertArtworkSubmissionSchema.extend(
   }),
 });
 
+export const nftSubmissionFormSchema = insertNftSubmissionSchema.extend({
+  terms: z.boolean().refine(val => val === true, {
+    message: "You must agree to the terms and conditions",
+  }),
+});
+
 export type ArtworkSubmissionForm = z.infer<typeof artworkSubmissionFormSchema>;
+export type NftSubmissionForm = z.infer<typeof nftSubmissionFormSchema>;
