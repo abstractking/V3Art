@@ -37,7 +37,7 @@ const ArtworkCard: FC<ArtworkCardProps> = ({ artwork, artist, onClick }) => {
         <div className="flex items-center mt-2">
           <div className="h-8 w-8 rounded-full bg-secondary overflow-hidden">
             <img 
-              src={artist.profileImage} 
+              src={artist.profileImage || ''} 
               alt={`${artist.name}'s avatar`}
               className="h-full w-full object-cover"
             />

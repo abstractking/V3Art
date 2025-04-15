@@ -9,18 +9,20 @@ interface LogoProps {
 
 const Logo: FC<LogoProps> = ({ size = 'md', className = '', showTagline = true }) => {
   const sizeClasses = {
-    sm: 'h-7 w-7',
-    md: 'h-9 w-9',
-    lg: 'h-11 w-11',
+    sm: 'text-xl',
+    md: 'text-2xl',
+    lg: 'text-3xl',
   };
 
   return (
     <Link href="/">
-      <div className="flex items-center cursor-pointer">
-        <span className="font-bold text-2xl">
-          <span className="text-white">Ve</span>
-          <span className="text-primary">Collab</span>
-        </span>
+      <div className={`flex items-center cursor-pointer ${className}`}>
+        <div className="flex items-center">
+          <span className={`font-bold ${sizeClasses[size]}`}>
+            <span className="text-foreground">Ve</span>
+            <span className="text-primary">Collab</span>
+          </span>
+        </div>
         {showTagline && (
           <div className="hidden md:block ml-3">
             <p className="text-xs text-muted-foreground">Blockchain-Powered NFT Marketplace</p>
