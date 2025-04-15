@@ -25,8 +25,7 @@ const About: FC = () => {
           </p>
           <p className="text-lg mb-6">
             By leveraging blockchain technology, we provide a transparent, secure platform that verifies World of V 
-            art ownership and connects artists directly with their audience, eliminating traditional intermediaries 
-            and ensuring artists receive fair compensation for their work.
+            art ownership and connects artists the funding they need to flourish.
           </p>
           <div className="bg-primary/10 p-6 rounded-lg border border-primary/20 my-8">
             <h3 className="text-xl font-semibold mb-3 text-primary">Our Vision</h3>
