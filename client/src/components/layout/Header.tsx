@@ -74,6 +74,21 @@ const Header = () => {
             </div>
           </div>
 
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-4 mr-4">
+            {navigation.map((item) => (
+              <Link key={item.name} href={item.href}>
+                <span className={`text-sm font-medium cursor-pointer ${
+                  isActive(item.href)
+                    ? 'text-primary'
+                    : 'text-foreground hover:text-primary'
+                }`}>
+                  {item.name}
+                </span>
+              </Link>
+            ))}
+          </nav>
+
           {/* Web3 Connect Button */}
           <div className="flex items-center">
             {isConnected ? (
