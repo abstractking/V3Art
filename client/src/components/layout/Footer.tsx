@@ -35,8 +35,8 @@ const Footer: FC = () => {
               </div>
             </div>
             <p className="mt-4 text-sm">
-              Our platform connects digital artists with collectors through the power of VeChain blockchain technology, 
-              ensuring authenticity and secure ownership of every artwork.
+              Our platform empowers independent artists by connecting them with collectors who receive $B3TR tokens 
+              for supporting creative work, striving for a future with sustainable income for artists.
             </p>
             <div className="mt-6 flex space-x-4">
               <a href="#" className="text-neutral-400 hover:text-neutral-300">
@@ -98,7 +98,7 @@ const Footer: FC = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-neutral-800 text-sm text-center">
-          <p>&copy; {new Date().getFullYear()} VeChain Art Gallery. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} VeCollab. All rights reserved.</p>
         </div>
       </div>
     </footer>
