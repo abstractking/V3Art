@@ -5,7 +5,7 @@ import { Twitter, Github, MessageSquare } from 'lucide-react';
 
 const Footer: FC = () => {
   const resourceLinks = [
-    { name: 'Documentation', href: '#' },
+    { name: 'Documentation', href: '/docs' },
     { name: 'VeChain Docs', href: 'https://docs.vechain.org/' },
     { name: 'Artist Guide', href: '#' },
     { name: 'Collector Guide', href: '#' },
@@ -30,8 +30,8 @@ const Footer: FC = () => {
                 V
               </div>
               <div className="ml-3">
-                <h3 className="text-xl font-bold text-white">VeChain Art Gallery</h3>
-                <p className="text-xs text-neutral-500">Blockchain-Powered Digital Art</p>
+                <h3 className="text-xl font-bold text-white">VeCollab</h3>
+                <p className="text-xs text-neutral-500">Supporting Independent Artists</p>
               </div>
             </div>
             <p className="mt-4 text-sm">
@@ -59,9 +59,17 @@ const Footer: FC = () => {
             <ul className="mt-4 space-y-2">
               {resourceLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-neutral-400 hover:text-neutral-300 text-sm">
-                    {link.name}
-                  </a>
+                  {link.href.startsWith('/') ? (
+                    <Link href={link.href}>
+                      <span className="text-neutral-400 hover:text-neutral-300 text-sm cursor-pointer">
+                        {link.name}
+                      </span>
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-neutral-400 hover:text-neutral-300 text-sm">
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -72,9 +80,17 @@ const Footer: FC = () => {
             <ul className="mt-4 space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-neutral-400 hover:text-neutral-300 text-sm">
-                    {link.name}
-                  </a>
+                  {link.href.startsWith('/') ? (
+                    <Link href={link.href}>
+                      <span className="text-neutral-400 hover:text-neutral-300 text-sm cursor-pointer">
+                        {link.name}
+                      </span>
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-neutral-400 hover:text-neutral-300 text-sm">
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

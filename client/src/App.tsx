@@ -9,6 +9,7 @@ import Artists from "@/pages/Artists";
 import ArtistDetail from "@/pages/ArtistDetail";
 import ArtworkDetail from "@/pages/ArtworkDetail";
 import Submit from "@/pages/Submit";
+import Documentation from "@/pages/Documentation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Web3Provider } from "@/hooks/use-web3";
@@ -25,6 +26,7 @@ function Router() {
           <Route path="/artists/:id" component={ArtistDetail} />
           <Route path="/artworks/:id" component={ArtworkDetail} />
           <Route path="/submit" component={Submit} />
+          <Route path="/docs" component={Documentation} />
           <Route component={NotFound} />
         </Switch>
       </main>
