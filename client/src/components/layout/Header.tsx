@@ -46,6 +46,7 @@ const Header = () => {
     { name: 'Submit', href: '/submit' },
     { name: 'Artists', href: '/artists' },
     { name: 'Dashboard', href: '/dashboard' },
+    { name: 'About', href: '/about' }, // Added About link
   ];
 
   const isActive = (path: string) => {
@@ -75,6 +76,14 @@ const Header = () => {
                 </div>
               </Link>
             ))}
+            <a 
+              href="https://github.com/your-repo/docs" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="px-3 py-2 text-sm font-medium cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
+            >
+              GitDoc
+            </a> {/* Added GitDoc link */}
           </nav>
 
           {/* Search Bar */}
@@ -171,7 +180,7 @@ const Header = () => {
               />
             </div>
           </div>
-          
+
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
               <div
@@ -186,6 +195,15 @@ const Header = () => {
               </div>
             </Link>
           ))}
+          <a 
+            href="https://github.com/your-repo/docs" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="block px-3 py-2 rounded-md text-base font-medium cursor-pointer text-muted-foreground hover:bg-secondary"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            GitDoc
+          </a> {/* Added GitDoc link for mobile */}
         </div>
       </div>
 
