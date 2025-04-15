@@ -47,7 +47,7 @@ const Submit: FC = () => {
   const form = useForm<NFTSubmissionForm>({
     resolver: zodResolver(nftSubmissionSchema),
     defaultValues: {
-      veWorldLink: '',
+      worldOfVLink: '',
       walletAddress: walletAddress || '',
       terms: false,
     },
@@ -66,15 +66,15 @@ const Submit: FC = () => {
     },
     onSuccess: () => {
       toast({
-        title: "Submission Successful",
-        description: "Your NFT has been submitted for verification.",
+        title: "Verification Request Submitted",
+        description: "Your World of V art has been submitted for verification.",
       });
       setIsSubmitted(true);
     },
     onError: (error) => {
       toast({
-        title: "Submission Failed",
-        description: error.message || "There was an error submitting your NFT.",
+        title: "Verification Failed",
+        description: error.message || "There was an error verifying your World of V art.",
         variant: "destructive",
       });
     },
@@ -114,8 +114,8 @@ const Submit: FC = () => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="mb-6 text-muted-foreground">
-              Your submission has been received and is now pending verification by our team.
-              We'll review the VeWorld link and connect it to your wallet address.
+              Your World of V NFT submission has been received and is now pending verification by our team.
+              We'll verify your ownership and connect it to your VeChain wallet address.
             </p>
             <div className="border rounded-lg p-4 bg-secondary/30 mb-6">
               <p className="font-medium">Next Steps:</p>
@@ -142,21 +142,21 @@ const Submit: FC = () => {
         <div className="md:flex">
           <div className="md:w-1/2 bg-primary p-8 text-white flex items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Submit Your NFT</h2>
+              <h2 className="text-3xl font-bold mb-4">Verify Your World of V Art</h2>
               <p className="text-white/90 mb-6">
-                Connect your VeWorld NFTs to our platform for increased visibility and collector exposure.
+                As a collector, verify your World of V marketplace art purchases to showcase them in our gallery.
               </p>
               <ul className="space-y-4 mb-6">
                 <li className="flex items-start">
                   <Shield className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Verified ownership display through VeChain blockchain</span>
+                  <span>Verified ownership through VeChain blockchain validation</span>
                 </li>
                 <li className="flex items-start">
                   <LinkIcon className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Direct linking to your VeWorld collections</span>
+                  <span>Direct linking to your World of V art collections</span>
                 </li>
               </ul>
-              <p className="text-sm text-white/70">*All submissions are verified manually by our team</p>
+              <p className="text-sm text-white/70">*All art purchases are verified manually by our curation team</p>
             </div>
           </div>
           
@@ -165,18 +165,18 @@ const Submit: FC = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="veWorldLink"
+                  name="worldOfVLink"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>VeWorld NFT Link</FormLabel>
+                      <FormLabel>World of V NFT Link</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="https://veworld.com/nft/..." 
+                          placeholder="https://worldofv.art/nft/..." 
                           {...field} 
                         />
                       </FormControl>
                       <FormDescription>
-                        Enter the full URL to your NFT on VeWorld platform
+                        Enter the full URL to your NFT from World of V marketplace
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -248,10 +248,10 @@ const Submit: FC = () => {
                   {isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting...
+                      Verifying...
                     </>
                   ) : (
-                    'Submit NFT'
+                    'Verify My Art'
                   )}
                 </Button>
               </form>

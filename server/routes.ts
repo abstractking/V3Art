@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertArtworkSubmissionSchema } from "@shared/schema";
+import { insertArtworkSubmissionSchema, insertNftSubmissionSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -73,10 +73,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Submit artwork
+  // Submit artwork (legacy endpoint for artists submissions)
   app.post("/api/submit", async (req, res) => {
     try {
-      // Validate request body
+      // Check if this is an NFT verification submission
+      if (req.body.worldOfVLink !== undefined) {
+        // This is an NFT submission
+        const nftSubmissionData = insertNftSubmissionSchema.parse(req.body);
+        
+        // Store the NFT submission
+        const submission = await storage.submitNft(nftSubmissionData);
+        
+        return res.status(201).json({
+          message: "NFT verification request received successfully",
+          submissionId: submission.id
+        });
+      }
+      
+      // Otherwise treat as a regular artwork submission
       const submissionData = insertArtworkSubmissionSchema.parse(req.body);
       
       // Store the submission
@@ -94,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      res.status(500).json({ message: "Failed to submit artwork" });
+      res.status(500).json({ message: "Failed to process submission" });
     }
   });
   
@@ -121,6 +135,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(updatedSubmission);
     } catch (error) {
       res.status(500).json({ message: "Failed to update submission status" });
+    }
+  });
+  
+  // Admin routes for managing NFT verification submissions
+  app.get("/api/admin/nft-submissions", async (req, res) => {
+    try {
+      const submissions = await storage.getAllNftSubmissions();
+      res.json(submissions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch NFT submissions" });
+    }
+  });
+  
+  app.put("/api/admin/nft-submissions/:id/status", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!status || !["approved", "rejected", "pending"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      
+      const updatedSubmission = await storage.updateNftSubmissionStatus(id, status);
+      res.json(updatedSubmission);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update NFT submission status" });
     }
   });
 
