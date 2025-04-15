@@ -51,7 +51,7 @@ const Home: FC = () => {
               </Link>
               <Link href="/submit">
                 <Button className="button-secondary">
-                  Create NFT
+                  Submit NFT
                 </Button>
               </Link>
             </div>

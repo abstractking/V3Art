@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { artworkSubmissionFormSchema, ArtworkSubmissionForm } from '@shared/schema';
+import { z } from 'zod';
 import { apiRequest } from '@/lib/queryClient';
 import { useWeb3 } from '@/hooks/use-web3';
 import { useToast } from '@/hooks/use-toast';
@@ -17,14 +17,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
   Card, 
@@ -34,82 +26,61 @@ import {
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
-import { Loader2, CheckCircle, Upload, Shield, Users } from 'lucide-react';
+import { Loader2, CheckCircle, LinkIcon, Shield } from 'lucide-react';
+
+// Define the schema for the submission form
+const nftSubmissionSchema = z.object({
+  veWorldLink: z.string().url({ message: "Please enter a valid VeWorld URL" }),
+  walletAddress: z.string().min(1, { message: "VeChain wallet address is required" }),
+  terms: z.boolean().refine(val => val === true, {
+    message: "You must agree to the terms and conditions",
+  }),
+});
+
+type NFTSubmissionForm = z.infer<typeof nftSubmissionSchema>;
 
 const Submit: FC = () => {
   const { walletAddress, isConnected, connect } = useWeb3();
   const { toast } = useToast();
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const form = useForm<ArtworkSubmissionForm>({
-    resolver: zodResolver(artworkSubmissionFormSchema),
+  const form = useForm<NFTSubmissionForm>({
+    resolver: zodResolver(nftSubmissionSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      category: '',
-      price: undefined,
-      artistName: '',
-      artistEmail: '',
+      veWorldLink: '',
       walletAddress: walletAddress || '',
-      imageFileName: '',
       terms: false,
     },
   });
 
   // Update wallet address in form when user connects
-  useState(() => {
+  useEffect(() => {
     if (walletAddress) {
       form.setValue('walletAddress', walletAddress);
     }
-  });
+  }, [walletAddress, form]);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: ArtworkSubmissionForm) => {
-      // Remove the 'email' and 'terms' fields as they're not in the schema
-      const { email, terms, ...submissionData } = data;
-      
-      // Add the email to the artistEmail field if not already set
-      if (!submissionData.artistEmail && email) {
-        submissionData.artistEmail = email;
-      }
-      
-      return await apiRequest('POST', '/api/submit', submissionData);
+    mutationFn: async (data: NFTSubmissionForm) => {
+      return await apiRequest('POST', '/api/submit', data);
     },
     onSuccess: () => {
       toast({
         title: "Submission Successful",
-        description: "Your artwork has been submitted for review.",
+        description: "Your NFT has been submitted for verification.",
       });
       setIsSubmitted(true);
     },
     onError: (error) => {
       toast({
         title: "Submission Failed",
-        description: error.message || "There was an error submitting your artwork.",
+        description: error.message || "There was an error submitting your NFT.",
         variant: "destructive",
       });
     },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFileName(file.name);
-      form.setValue('imageFileName', file.name);
-    }
-  };
-
-  const onSubmit = (data: ArtworkSubmissionForm) => {
-    if (!selectedFileName) {
-      toast({
-        title: "Missing Artwork File",
-        description: "Please upload an image file for your artwork",
-        variant: "destructive",
-      });
-      return;
-    }
-    
+  const onSubmit = (data: NFTSubmissionForm) => {
     mutate(data);
   };
 
@@ -128,35 +99,35 @@ const Submit: FC = () => {
 
   if (isSubmitted) {
     return (
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <Card className="max-w-2xl mx-auto">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <Card className="max-w-2xl mx-auto bg-card shadow-lg">
           <CardHeader>
             <div className="flex justify-center mb-4">
-              <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle className="h-10 w-10 text-green-600" />
+              <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center">
+                <CheckCircle className="h-10 w-10 text-primary" />
               </div>
             </div>
             <CardTitle className="text-2xl text-center">Submission Received!</CardTitle>
             <CardDescription className="text-center">
-              Thank you for submitting your artwork to the VeChain Art Gallery
+              Thank you for submitting your NFT to VeCollab
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="mb-6">
-              Your submission has been received and is now pending review by our team.
-              We'll notify you once your artwork has been approved and added to the gallery.
+            <p className="mb-6 text-muted-foreground">
+              Your submission has been received and is now pending verification by our team.
+              We'll review the VeWorld link and connect it to your wallet address.
             </p>
-            <div className="border rounded-lg p-4 bg-neutral-50 mb-6">
+            <div className="border rounded-lg p-4 bg-secondary/30 mb-6">
               <p className="font-medium">Next Steps:</p>
-              <ol className="text-left list-decimal pl-6 mt-2 space-y-2">
-                <li>Our curation team will review your submission</li>
-                <li>If approved, your artwork will be minted on the VeChain blockchain</li>
-                <li>You'll receive a notification when your artwork is live</li>
+              <ol className="text-left list-decimal pl-6 mt-2 space-y-2 text-muted-foreground">
+                <li>Our verification team will review your submission</li>
+                <li>If verified, your NFT will be displayed in our gallery</li>
+                <li>You'll receive a notification when your NFT is live</li>
               </ol>
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button onClick={() => window.location.href = '/'}>
+            <Button onClick={() => window.location.href = '/'} className="button-primary">
               Return to Gallery
             </Button>
           </CardFooter>
@@ -166,31 +137,26 @@ const Submit: FC = () => {
   }
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="submission-section">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" id="submission-section">
+      <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border">
         <div className="md:flex">
           <div className="md:w-1/2 bg-primary p-8 text-white flex items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Submit Your Artwork</h2>
-              <p className="text-neutral-100 mb-6">
-                Have your digital art featured on the VeChain blockchain. Get discovered and connect with collectors
-                around the world.
+              <h2 className="text-3xl font-bold mb-4">Submit Your NFT</h2>
+              <p className="text-white/90 mb-6">
+                Connect your VeWorld NFTs to our platform for increased visibility and collector exposure.
               </p>
               <ul className="space-y-4 mb-6">
                 <li className="flex items-start">
                   <Shield className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Secure blockchain storage for your creations</span>
+                  <span>Verified ownership display through VeChain blockchain</span>
                 </li>
                 <li className="flex items-start">
-                  <Users className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Artist profile highlighting your portfolio</span>
-                </li>
-                <li className="flex items-start">
-                  <Upload className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Exposure to VeChain community and collectors</span>
+                  <LinkIcon className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                  <span>Direct linking to your VeWorld collections</span>
                 </li>
               </ul>
-              <p className="text-sm text-neutral-200">*All submissions are reviewed manually by our team</p>
+              <p className="text-sm text-white/70">*All submissions are verified manually by our team</p>
             </div>
           </div>
           
@@ -199,135 +165,34 @@ const Submit: FC = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="title"
+                  name="veWorldLink"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Artwork Title</FormLabel>
+                      <FormLabel>VeWorld NFT Link</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter the title of your artwork" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Describe your artwork, its inspiration, and meaning"
-                          className="resize-none" 
+                        <Input 
+                          placeholder="https://veworld.com/nft/..." 
                           {...field} 
                         />
                       </FormControl>
+                      <FormDescription>
+                        Enter the full URL to your NFT on VeWorld platform
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Category</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="abstract">Abstract</SelectItem>
-                            <SelectItem value="landscape">Landscape</SelectItem>
-                            <SelectItem value="portrait">Portrait</SelectItem>
-                            <SelectItem value="3d">3D Artwork</SelectItem>
-                            <SelectItem value="animation">Animation</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price (VET)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            min="0" 
-                            step="0.01" 
-                            placeholder="Enter price in VET"
-                            {...field}
-                            onChange={(e) => {
-                              const value = e.target.value ? parseFloat(e.target.value) : undefined;
-                              field.onChange(value);
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="artistName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Artist Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your name or pseudonym" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="email" 
-                            placeholder="Your contact email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
                 
                 <FormField
                   control={form.control}
                   name="walletAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>VeChain Wallet Address</FormLabel>
+                      <FormLabel>VeChain Wallet Address or VET Domain</FormLabel>
                       <div className="flex gap-2">
                         <FormControl>
                           <Input 
-                            placeholder="Your VeChain wallet address"
+                            placeholder="Your VeChain wallet address or VET domain"
                             {...field}
                             disabled={isConnected}
                           />
@@ -337,49 +202,15 @@ const Submit: FC = () => {
                             type="button" 
                             variant="secondary" 
                             onClick={handleConnectWallet}
+                            className="whitespace-nowrap"
                           >
                             Connect
                           </Button>
                         )}
                       </div>
                       <FormDescription>
-                        Connect your VeChain wallet or enter your address manually
+                        Connect your VeChain wallet or enter your address/domain manually
                       </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="imageFileName"
-                  render={({ field }) => (
-                    <FormItem className="border-2 border-dashed border-neutral-300 rounded-md px-6 py-8 text-center">
-                      <FormLabel className="sr-only">Artwork File</FormLabel>
-                      <FormControl>
-                        <div className="flex flex-col items-center justify-center">
-                          <Upload className="h-10 w-10 text-neutral-400 mb-2" />
-                          <p className="mt-2 text-sm text-neutral-600">
-                            {selectedFileName 
-                              ? `Selected: ${selectedFileName}`
-                              : (
-                                <>
-                                  Drag and drop your file here, or <span className="text-primary font-medium cursor-pointer" onClick={() => document.getElementById('artwork-file')?.click()}>browse</span>
-                                </>
-                              )
-                            }
-                          </p>
-                          <p className="mt-1 text-xs text-neutral-500">PNG, JPG, GIF, MP4, WEBM up to 50MB</p>
-                          <Input
-                            id="artwork-file"
-                            type="file"
-                            className="hidden"
-                            accept="image/*,video/*"
-                            onChange={handleFileChange}
-                          />
-                          <input type="hidden" {...field} />
-                        </div>
-                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -389,7 +220,7 @@ const Submit: FC = () => {
                   control={form.control}
                   name="terms"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -398,8 +229,8 @@ const Submit: FC = () => {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal">
-                          I confirm this is my original artwork and I agree to the 
-                          <a href="#" className="text-primary hover:text-primary-dark ml-1">
+                          I confirm I am the owner of this NFT and I agree to the 
+                          <a href="#" className="text-primary hover:text-primary/90 ml-1">
                             Terms and Conditions
                           </a>
                         </FormLabel>
@@ -411,7 +242,7 @@ const Submit: FC = () => {
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-secondary hover:bg-secondary-dark text-white"
+                  className="w-full button-primary"
                   disabled={isPending}
                 >
                   {isPending ? (
@@ -420,7 +251,7 @@ const Submit: FC = () => {
                       Submitting...
                     </>
                   ) : (
-                    'Submit Artwork'
+                    'Submit NFT'
                   )}
                 </Button>
               </form>

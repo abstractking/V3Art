@@ -48,6 +48,14 @@ export const artworkSubmissions = pgTable("artwork_submissions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const nftSubmissions = pgTable("nft_submissions", {
+  id: serial("id").primaryKey(),
+  veWorldLink: text("veworld_link").notNull(),
+  walletAddress: text("wallet_address").notNull(),
+  status: text("status").default("pending"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -83,6 +91,11 @@ export const insertArtworkSubmissionSchema = createInsertSchema(artworkSubmissio
   artistEmail: true,
   walletAddress: true,
   imageFileName: true,
+});
+
+export const insertNftSubmissionSchema = createInsertSchema(nftSubmissions).pick({
+  veWorldLink: true,
+  walletAddress: true,
 });
 
 // Types
