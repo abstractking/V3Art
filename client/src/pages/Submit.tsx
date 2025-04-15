@@ -229,10 +229,7 @@ const Submit: FC = () => {
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal">
-                          I confirm I am the owner of this NFT and I agree to the 
-                          <a href="#" className="text-primary hover:text-primary/90 ml-1">
-                            Terms and Conditions
-                          </a>
+                          I confirm I am the owner of this NFT
                         </FormLabel>
                         <FormMessage />
                       </div>
@@ -251,7 +248,7 @@ const Submit: FC = () => {
                       Verifying...
                     </>
                   ) : (
-                    'Verify My Art'
+                    'Verify For $B3TR'
                   )}
                 </Button>
               </form>

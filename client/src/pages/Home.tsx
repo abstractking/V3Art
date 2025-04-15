@@ -51,7 +51,7 @@ const Home: FC = () => {
               </Link>
               <Link href="/submit">
                 <Button className="button-secondary">
-                  Verify Your Art
+                  Verify For $B3TR
                 </Button>
               </Link>
             </div>
