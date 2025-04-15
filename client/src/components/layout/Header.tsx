@@ -74,21 +74,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4 mr-4">
-            {navigation.map((item) => (
-              <Link key={item.name} href={item.href}>
-                <span className={`text-sm font-medium cursor-pointer ${
-                  isActive(item.href)
-                    ? 'text-primary'
-                    : 'text-foreground hover:text-primary'
-                }`}>
-                  {item.name}
-                </span>
-              </Link>
-            ))}
-          </nav>
-
           {/* Web3 Connect Button */}
           <div className="flex items-center">
             {isConnected ? (
@@ -143,8 +128,8 @@ const Header = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          {/* Menu button */}
+          <div className="flex items-center">
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-foreground focus:outline-none"
