@@ -24,10 +24,13 @@ const Header = () => {
     try {
       await connect();
     } catch (err) {
+      //Type assertion to Error
+      const error = err as Error;
+
       console.error("Connection error:", err); // Debug log
       toast({
         title: "Connection Failed",
-        description: err.message || "Could not connect to VeChain wallet",
+        description: error.message || "Could not connect to VeChain wallet",
         variant: "destructive",
       });
     }

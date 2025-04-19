@@ -32,7 +32,7 @@ function Router() {
           <Route path="/docs" component={Documentation} />
           <Route path="/dashboard" component={CollectorDashboard} />
           <Route path="/about" component={About} />
-          <Route path="/admin" component={AdminDashboard} />
+          <Route path="/admin/:id" component={AdminDashboard} />
           <Route component={NotFound} />
         </Switch>
       </main>
