@@ -11,6 +11,7 @@ import ArtworkDetail from "@/pages/ArtworkDetail";
 import Submit from "@/pages/Submit";
 import Documentation from "@/pages/Documentation";
 import CollectorDashboard from "@/pages/CollectorDashboard";
+import AdminDashboard from "@/components/layout/AdminDashboard";
 import About from "@/pages/About";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -31,6 +32,7 @@ function Router() {
           <Route path="/docs" component={Documentation} />
           <Route path="/dashboard" component={CollectorDashboard} />
           <Route path="/about" component={About} />
+          <Route path="/admin" component={AdminDashboard} />
           <Route component={NotFound} />
         </Switch>
       </main>
