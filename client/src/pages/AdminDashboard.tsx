@@ -7,11 +7,19 @@ export const AdminDashboard = () => {
   const adminWallet = import.meta.env.VITE_ADMIN_WALLET; // Load admin wallet from environment
 
   useEffect(() => {
+    console.log("Debugging AdminDashboard:");
+    console.log("Wallet Address:", walletAddress);
+    console.log("Is Connected:", isConnected);
+    console.log("Admin Wallet (from env):", adminWallet);
+
     if (isConnected && walletAddress) {
-      // Compare the connected wallet with the admin wallet
-      setIsAdmin(walletAddress.toLowerCase() === adminWallet.toLowerCase());
+      const isAdminCheck = walletAddress.toLowerCase() === adminWallet?.toLowerCase();
+      setIsAdmin(isAdminCheck);
+
+      console.log("Is Admin:", isAdminCheck);
     } else {
       setIsAdmin(false);
+      console.log("Not connected or no wallet address.");
     }
   }, [walletAddress, isConnected, adminWallet]);
 
