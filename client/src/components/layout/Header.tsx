@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useWeb3 } from '@/hooks/use-web3';
@@ -25,9 +24,10 @@ const Header = () => {
     try {
       await connect();
     } catch (err) {
+      console.error("Connection error:", err); // Debug log
       toast({
         title: "Connection Failed",
-        description: "Could not connect to VeChain wallet",
+        description: err.message || "Could not connect to VeChain wallet",
         variant: "destructive",
       });
     }
@@ -50,7 +50,7 @@ const Header = () => {
     { name: 'About', href: '/about' },
   ];
 
-  const isActive = (path: string) => {
+  const isRouteActive = (path: string) => {
     if (path === '/' && location === '/') return true;
     if (path !== '/' && location.startsWith(path)) return true;
     return false;
@@ -81,18 +81,18 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="rounded-full flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    <span className="hidden sm:inline">{walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}</span>
-                    <span className="sm:hidden">{walletAddress?.slice(0, 4)}...</span>
+                    <span className="hidden sm:inline">{walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "No Address"}</span>
+                    <span className="sm:hidden">{walletAddress ? `${walletAddress.slice(0, 4)}...` : "No Address"}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Wallet</DropdownMenuLabel>
                   <DropdownMenuItem className="cursor-default opacity-70">
-                    {walletAddress}
+                    {walletAddress || "No Address"}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-default">
-                    Balance: {balance ? `${parseFloat(balance).toFixed(2)} VET` : 'Loading...'}
+                    Balance: {balance && !isNaN(parseFloat(balance)) ? `${parseFloat(balance).toFixed(2)} VET` : "Loading..."}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <Link href="/dashboard">
@@ -133,6 +133,8 @@ const Header = () => {
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-foreground focus:outline-none"
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle mobile menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -173,7 +175,7 @@ const Header = () => {
                 <Link key={item.name} href={item.href}>
                   <div
                     className={`block px-4 py-3 text-lg font-medium cursor-pointer border-b border-border ${
-                      isActive(item.href)
+                      isRouteActive(item.href)
                         ? 'text-primary'
                         : 'text-foreground hover:text-primary'
                     }`}
@@ -188,7 +190,10 @@ const Header = () => {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="block px-3 py-2 rounded-md text-base font-medium cursor-pointer text-muted-foreground hover:bg-secondary"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!e.target.href.startsWith(window.location.origin)) return;
+                  setMobileMenuOpen(false);
+                }}
               >
                 GitDoc
               </a>
@@ -205,7 +210,7 @@ const Header = () => {
               <AlertCircle className="h-5 w-5 text-destructive" />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm text-destructive">{error.message || "An unexpected error occurred"}</p>
             </div>
           </div>
         </div>
@@ -213,3 +218,5 @@ const Header = () => {
     </header>
   );
 };
+
+export default Header;
