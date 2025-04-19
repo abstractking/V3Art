@@ -11,7 +11,7 @@ import ArtworkDetail from "@/pages/ArtworkDetail";
 import Submit from "@/pages/Submit";
 import Documentation from "@/pages/Documentation";
 import CollectorDashboard from "@/pages/CollectorDashboard";
-import AdminDashboard from "@/components/layout/AdminDashboard";
+import AdminDashboard from "@/pages/AdminDashboard";
 import About from "@/pages/About";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
