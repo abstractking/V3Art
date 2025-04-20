@@ -1,5 +1,6 @@
 import { useWeb3 } from "@/hooks/use-web3";
 import { useEffect, useState } from "react";
+import UserList from "@/components/ui/user-list";
 
 export const AdminDashboard = () => {
   const { walletAddress, isConnected } = useWeb3();
@@ -35,6 +36,7 @@ export const AdminDashboard = () => {
     <div>
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
       <p>Welcome, Admin! You have access to the admin panel.</p>
+      <UserList />
       {/* Add admin-specific components here */}
     </div>
   );

@@ -7,6 +7,16 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = app.route("/api");
+
+  app.get("/api/users", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const users = await storage.getUsers(limit); // Assuming `getUsers` is implemented in `storage`
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
   
   // Get all artists
   app.get("/api/artists", async (req, res) => {
