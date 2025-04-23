@@ -9,6 +9,7 @@ interface Web3ContextType {
   error: string | null;
   connect: () => Promise<void>;
   disconnect: () => void;
+  userId: string | null;
 }
 
 const defaultContext: Web3ContextType = {
@@ -19,6 +20,7 @@ const defaultContext: Web3ContextType = {
   error: null,
   connect: async () => {},
   disconnect: () => {},
+  userId: null,
 };
 
 const Web3Context = createContext<Web3ContextType>(defaultContext);
@@ -28,6 +30,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
   const [balance, setBalance] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for saved wallet address in localStorage on initial load
@@ -78,6 +81,17 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     localStorage.removeItem('walletAddress');
   };
 
+  useEffect(() => {
+    if (walletAddress) {
+      fetch(`/api/users/by-wallet/${walletAddress}`)
+        .then((response) => response.json())
+        .then((user) => {
+          setUserId(user.id);
+        })
+        .catch((error) => console.error("Failed to fetch user ID:", error));
+    }
+  }, [walletAddress]);
+
   const contextValue: Web3ContextType = {
     walletAddress,
     isConnected: !!walletAddress,
@@ -86,6 +100,7 @@ export function Web3Provider({ children }: { children: ReactNode }) {
     error,
     connect,
     disconnect,
+    userId,
   };
 
   return (

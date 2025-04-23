@@ -33,6 +33,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+
+  // Add a route to get or create user by wallet address
+  app.get("/api/users/by-wallet/:walletAddress", async (req, res) => {
+    try {
+      const { walletAddress } = req.params;
+      const user = await storage.getOrCreateUserByWallet(walletAddress);
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch or create user" });
+    }
+  });
   
   // Get all artists
   app.get("/api/artists", async (req, res) => {

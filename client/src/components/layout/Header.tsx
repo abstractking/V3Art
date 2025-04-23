@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Header = () => {
   const [location] = useLocation();
-  const { walletAddress, isConnected, balance, isConnecting, error, connect, disconnect } = useWeb3();
+  const { walletAddress, isConnected, balance, isConnecting, error, connect, disconnect, userId } = useWeb3();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toast } = useToast();
 
@@ -49,7 +49,7 @@ const Header = () => {
     { name: 'Explore', href: '/explore' },
     { name: 'Submit', href: '/submit' },
     { name: 'Artists', href: '/artists' },
-    { name: 'Profile', href: '/profile' },
+    { name: 'Profile', href: userId ? `/profile/${userId}` : '/profile' },
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Admin', href: '/admin' },
     { name: 'About', href: '/about' },

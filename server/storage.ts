@@ -13,6 +13,7 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   logWalletLogin(walletAddress: string): void;
   getLoggedInWallets(): string[];
+  getOrCreateUserByWallet(walletAddress: string): Promise<User>;
 
   // Artist methods
   getArtist(id: number): Promise<Artist | undefined>;
@@ -93,6 +94,20 @@ export class MemStorage implements IStorage {
 
   getLoggedInWallets(): string[] {
     return Array.from(this.loggedInWallets); // Return all logged-in wallets
+  }
+
+  async getOrCreateUserByWallet(walletAddress: string): Promise<User> {
+    let user = Array.from(this.users.values()).find(
+      (user) => user.walletAddress === walletAddress
+    );
+
+    if (!user) {
+      const id = this.userId++;
+      user = { id, username: `User${id}`, walletAddress };
+      this.users.set(id, user);
+    }
+
+    return user;
   }
 
   // Artist methods
