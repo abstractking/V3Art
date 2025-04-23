@@ -15,6 +15,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import About from "@/pages/About";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Profile from "@/pages/Profile";
 import { Web3Provider } from "@/hooks/use-web3";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
           <Route path="/docs" component={Documentation} />
           <Route path="/dashboard" component={CollectorDashboard} />
           <Route path="/about" component={About} />
+          <Route path="/profile/:id" component={Profile} />
           <Route path="/admin" component={AdminDashboard} />
           <Route component={NotFound} />
         </Switch>
