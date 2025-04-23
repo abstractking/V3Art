@@ -1,14 +1,37 @@
-import { useState } from 'react';
+import { useParams } from "wouter";
+import { useEffect, useState } from "react";
 import { Button } from '@/components/ui/button';
 
 const Profile = () => {
-  const [username, setUsername] = useState('');
-  const [profileImage, setProfileImage] = useState('');
-  const [headerBackground, setHeaderBackground] = useState('');
+  const { id } = useParams();
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [headerBackground, setHeaderBackground] = useState("");
+
+  useEffect(() => {
+    if (id) {
+      // Fetch user data by ID
+      fetch(`/api/users/${id}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUsername(data.username);
+          setProfileImage(data.profileImage || "");
+          setHeaderBackground(data.headerBackground || "");
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [id]);
 
   const handleUpdateProfile = () => {
     // Logic to update profile details
-    console.log('Profile updated:', { username, profileImage, headerBackground });
+    console.log("Profile updated:", { username, profileImage, headerBackground });
   };
 
   return (
