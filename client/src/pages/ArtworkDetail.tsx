@@ -92,8 +92,8 @@ const ArtworkDetail: FC = () => {
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full bg-neutral-300 overflow-hidden">
                 <img 
-                  src={artist.profileImage}
-                  alt={`${artist.name}'s avatar`}
+                  src={artist.profileImage || undefined}
+                  alt="Artist Profile"
                   className="h-full w-full object-cover"
                 />
               </div>

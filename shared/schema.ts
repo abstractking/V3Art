@@ -58,7 +58,6 @@ export const nftSubmissions = pgTable("nft_submissions", {
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
-  password: true,
   walletAddress: true,
 });
 
@@ -69,6 +68,8 @@ export const insertArtistSchema = createInsertSchema(artists).pick({
   coverImage: true,
   walletAddress: true,
   userId: true,
+  artworkCount: true, // Added
+  likesCount: true, // Added
 });
 
 export const insertArtworkSchema = createInsertSchema(artworks).pick({
@@ -79,6 +80,8 @@ export const insertArtworkSchema = createInsertSchema(artworks).pick({
   price: true,
   tokenId: true,
   artistId: true,
+  createdAt: true, // Added
+  isApproved: true, // Added
 });
 
 export const insertArtworkSubmissionSchema = createInsertSchema(artworkSubmissions).pick({
@@ -111,7 +114,12 @@ export type ArtworkSubmission = typeof artworkSubmissions.$inferSelect;
 export type InsertArtworkSubmission = z.infer<typeof insertArtworkSubmissionSchema>;
 
 export type NftSubmission = typeof nftSubmissions.$inferSelect;
-export type InsertNftSubmission = z.infer<typeof insertNftSubmissionSchema>;
+
+export interface InsertNftSubmission {
+  walletAddress: string;
+  worldOfVLink: string;
+  tokenId?: string;
+}
 
 // Extended validation schemas
 export const artworkSubmissionFormSchema = insertArtworkSubmissionSchema.extend({

@@ -56,7 +56,7 @@ const ArtistDetail: FC = () => {
         {/* Artist Header/Banner */}
         <div className="relative h-64 bg-neutral-200">
           <img 
-            src={artist.coverImage} 
+            src={artist.coverImage || undefined} 
             alt={`${artist.name}'s cover`}
             className="w-full h-full object-cover"
           />
@@ -70,7 +70,7 @@ const ArtistDetail: FC = () => {
               <div className="mb-6 md:mb-0 md:mr-8">
                 <div className="h-32 w-32 rounded-full border-4 border-white overflow-hidden bg-neutral-300 shadow-lg">
                   <img 
-                    src={artist.profileImage} 
+                    src={artist.profileImage || undefined} 
                     alt={artist.name}
                     className="h-full w-full object-cover"
                   />

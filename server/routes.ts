@@ -1,206 +1,221 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { insertArtworkSubmissionSchema, insertNftSubmissionSchema } from "@shared/schema";
+import { storage } from "./storage.ts";
+import { insertArtworkSubmissionSchema, insertNftSubmissionSchema } from "../shared/schema.ts";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API routes
-  const apiRouter = app.route("/api");
+  console.log("Initializing routes...");
+  console.log("Registering routes...");
 
-  app.get("/api/users", async (req, res) => {
-    try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const users = await storage.getUsers(limit); // Assuming `getUsers` is implemented in `storage`
-      res.json(users);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch users" });
-    }
-  });
-  
-  // Add a route to get user by ID
-  app.get("/api/users/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const user = await storage.getUser(id);
+  try {
+    // API routes
+    const apiRouter = app.route("/api");
 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+    app.get("/api/users", async (req, res) => {
+      try {
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+        const users = await storage.getUsers(limit); // Assuming `getUsers` is implemented in `storage`
+        res.json(users);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch users" });
       }
+    });
+    
+    // Add a route to get user by ID
+    console.log("Registering /api/users/:id route...");
+    app.get("/api/users/:id", async (req, res) => {
+      console.log("Received request for user ID:", req.params.id);
+      try {
+        const id = parseInt(req.params.id);
+        const user = await storage.getUser(id);
 
-      res.json(user);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+        if (!user) {
+          console.log("User not found for ID:", req.params.id);
+          return res.status(404).json({ message: "User not found" });
+        }
 
-  // Add a route to get or create user by wallet address
-  app.get("/api/users/by-wallet/:walletAddress", async (req, res) => {
-    try {
-      const { walletAddress } = req.params;
-      const user = await storage.getOrCreateUserByWallet(walletAddress);
-      res.json(user);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch or create user" });
-    }
-  });
-  
-  // Get all artists
-  app.get("/api/artists", async (req, res) => {
-    try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const artists = await storage.getArtists(limit);
-      res.json(artists);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch artists" });
-    }
-  });
-  
-  // Get artist by ID
-  app.get("/api/artists/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const artist = await storage.getArtist(id);
-      
-      if (!artist) {
-        return res.status(404).json({ message: "Artist not found" });
+        console.log("User found:", user);
+        res.json(user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Failed to fetch user" });
       }
-      
-      res.json(artist);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch artist" });
-    }
-  });
-  
-  // Get artworks by artist ID
-  app.get("/api/artists/:id/artworks", async (req, res) => {
-    try {
-      const artistId = parseInt(req.params.id);
-      const artworks = await storage.getArtworksByArtistId(artistId);
-      res.json(artworks);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch artist's artworks" });
-    }
-  });
-  
-  // Get all artworks
-  app.get("/api/artworks", async (req, res) => {
-    try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const artworks = await storage.getArtworks(limit);
-      res.json(artworks);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch artworks" });
-    }
-  });
-  
-  // Get artwork by ID
-  app.get("/api/artworks/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const artwork = await storage.getArtwork(id);
-      
-      if (!artwork) {
-        return res.status(404).json({ message: "Artwork not found" });
+    });
+
+    // Add a route to get or create user by wallet address
+    app.get("/api/users/by-wallet/:walletAddress", async (req, res) => {
+      try {
+        const { walletAddress } = req.params;
+        const user = await storage.getOrCreateUserByWallet(walletAddress);
+        res.json(user);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch or create user" });
       }
-      
-      res.json(artwork);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch artwork" });
-    }
-  });
-  
-  // Submit artwork (legacy endpoint for artists submissions)
-  app.post("/api/submit", async (req, res) => {
-    try {
-      // Check if this is an NFT verification submission
-      if (req.body.worldOfVLink !== undefined) {
-        // This is an NFT submission
-        const nftSubmissionData = insertNftSubmissionSchema.parse(req.body);
+    });
+    
+    // Get all artists
+    app.get("/api/artists", async (req, res) => {
+      try {
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+        const artists = await storage.getArtists(limit);
+        res.json(artists);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch artists" });
+      }
+    });
+    
+    // Get artist by ID
+    app.get("/api/artists/:id", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const artist = await storage.getArtist(id);
         
-        // Store the NFT submission
-        const submission = await storage.submitNft(nftSubmissionData);
+        if (!artist) {
+          return res.status(404).json({ message: "Artist not found" });
+        }
         
-        return res.status(201).json({
-          message: "NFT verification request received successfully",
+        res.json(artist);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch artist" });
+      }
+    });
+    
+    // Get artworks by artist ID
+    app.get("/api/artists/:id/artworks", async (req, res) => {
+      try {
+        const artistId = parseInt(req.params.id);
+        const artworks = await storage.getArtworksByArtistId(artistId);
+        res.json(artworks);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch artist's artworks" });
+      }
+    });
+    
+    // Get all artworks
+    app.get("/api/artworks", async (req, res) => {
+      try {
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+        const artworks = await storage.getArtworks(limit);
+        res.json(artworks);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch artworks" });
+      }
+    });
+    
+    // Get artwork by ID
+    app.get("/api/artworks/:id", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const artwork = await storage.getArtwork(id);
+        
+        if (!artwork) {
+          return res.status(404).json({ message: "Artwork not found" });
+        }
+        
+        res.json(artwork);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch artwork" });
+      }
+    });
+    
+    // Submit artwork (legacy endpoint for artists submissions)
+    app.post("/api/submit", async (req, res) => {
+      try {
+        // Check if this is an NFT verification submission
+        if (req.body.worldOfVLink !== undefined) {
+          // This is an NFT submission
+          const nftSubmissionData = insertNftSubmissionSchema.parse(req.body);
+          
+          // Store the NFT submission
+          const submission = await storage.submitNft(nftSubmissionData);
+          
+          return res.status(201).json({
+            message: "NFT verification request received successfully",
+            submissionId: submission.id
+          });
+        }
+        
+        // Otherwise treat as a regular artwork submission
+        const submissionData = insertArtworkSubmissionSchema.parse(req.body);
+        
+        // Store the submission
+        const submission = await storage.submitArtwork(submissionData);
+        
+        res.status(201).json({
+          message: "Artwork submission received successfully",
           submissionId: submission.id
         });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return res.status(400).json({ 
+            message: "Invalid submission data", 
+            errors: error.errors 
+          });
+        }
+        
+        res.status(500).json({ message: "Failed to process submission" });
       }
-      
-      // Otherwise treat as a regular artwork submission
-      const submissionData = insertArtworkSubmissionSchema.parse(req.body);
-      
-      // Store the submission
-      const submission = await storage.submitArtwork(submissionData);
-      
-      res.status(201).json({
-        message: "Artwork submission received successfully",
-        submissionId: submission.id
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          message: "Invalid submission data", 
-          errors: error.errors 
-        });
+    });
+    
+    // Admin routes for managing submissions
+    app.get("/api/admin/submissions", async (req, res) => {
+      try {
+        const submissions = await storage.getAllSubmissions();
+        res.json(submissions);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch submissions" });
       }
-      
-      res.status(500).json({ message: "Failed to process submission" });
-    }
-  });
-  
-  // Admin routes for managing submissions
-  app.get("/api/admin/submissions", async (req, res) => {
-    try {
-      const submissions = await storage.getAllSubmissions();
-      res.json(submissions);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch submissions" });
-    }
-  });
-  
-  app.put("/api/admin/submissions/:id/status", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { status } = req.body;
-      
-      if (!status || !["approved", "rejected", "pending"].includes(status)) {
-        return res.status(400).json({ message: "Invalid status" });
+    });
+    
+    app.put("/api/admin/submissions/:id/status", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const { status } = req.body;
+        
+        if (!status || !["approved", "rejected", "pending"].includes(status)) {
+          return res.status(400).json({ message: "Invalid status" });
+        }
+        
+        const updatedSubmission = await storage.updateSubmissionStatus(id, status);
+        res.json(updatedSubmission);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to update submission status" });
       }
-      
-      const updatedSubmission = await storage.updateSubmissionStatus(id, status);
-      res.json(updatedSubmission);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to update submission status" });
-    }
-  });
-  
-  // Admin routes for managing NFT verification submissions
-  app.get("/api/admin/nft-submissions", async (req, res) => {
-    try {
-      const submissions = await storage.getAllNftSubmissions();
-      res.json(submissions);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch NFT submissions" });
-    }
-  });
-  
-  app.put("/api/admin/nft-submissions/:id/status", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { status } = req.body;
-      
-      if (!status || !["approved", "rejected", "pending"].includes(status)) {
-        return res.status(400).json({ message: "Invalid status" });
+    });
+    
+    // Admin routes for managing NFT verification submissions
+    app.get("/api/admin/nft-submissions", async (req, res) => {
+      try {
+        const submissions = await storage.getAllNftSubmissions();
+        res.json(submissions);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch NFT submissions" });
       }
-      
-      const updatedSubmission = await storage.updateNftSubmissionStatus(id, status);
-      res.json(updatedSubmission);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to update NFT submission status" });
-    }
-  });
+    });
+    
+    app.put("/api/admin/nft-submissions/:id/status", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id);
+        const { status } = req.body;
+        
+        if (!status || !["approved", "rejected", "pending"].includes(status)) {
+          return res.status(400).json({ message: "Invalid status" });
+        }
+        
+        const updatedSubmission = await storage.updateNftSubmissionStatus(id, status);
+        res.json(updatedSubmission);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to update NFT submission status" });
+      }
+    });
 
-  const httpServer = createServer(app);
-  return httpServer;
+    console.log("Routes registered successfully.");
+    console.log("Routes initialized successfully.");
+    const httpServer = createServer(app);
+    return httpServer;
+  } catch (error) {
+    console.error("Error initializing routes:", error);
+    throw error;
+  }
 }

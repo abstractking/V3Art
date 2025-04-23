@@ -3,12 +3,29 @@ import { Dialog, Transition } from '@headlessui/react';
 import { X } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'wouter';
-import { Artwork, Artist } from '@shared/schema';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useWeb3 } from '@/hooks/use-web3';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+
+interface Artwork {
+  id: number;
+  artistId: number;
+  imageUrl: string;
+  title: string;
+  description: string;
+  createdAt: Date;
+  tokenId: string;
+  category: string;
+  price: number;
+}
+
+interface Artist {
+  id: number;
+  name: string;
+  profileImage: string;
+}
 
 interface ArtworkDetailModalProps {
   artworkId: number | null;
@@ -20,12 +37,12 @@ const ArtworkDetailModal: FC<ArtworkDetailModalProps> = ({ artworkId, isOpen, on
   const { isConnected, connect } = useWeb3();
   const { toast } = useToast();
 
-  const { data: artwork, isLoading: artworkLoading } = useQuery({
+  const { data: artwork, isLoading: artworkLoading } = useQuery<Artwork>({
     queryKey: [`/api/artworks/${artworkId}`],
     enabled: !!artworkId && isOpen,
   });
 
-  const { data: artist, isLoading: artistLoading } = useQuery({
+  const { data: artist, isLoading: artistLoading } = useQuery<Artist>({
     queryKey: [`/api/artists/${artwork?.artistId}`],
     enabled: !!artwork?.artistId,
   });

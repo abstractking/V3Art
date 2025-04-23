@@ -10,6 +10,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (id) {
+      console.log("Fetching user data for ID:", id); // Debug log
       // Fetch user data by ID
       fetch(`/api/users/${id}`)
         .then((response) => {
@@ -25,6 +26,7 @@ const Profile = () => {
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
+          setUsername("User Not Found"); // Display fallback message
         });
     }
   }, [id]);

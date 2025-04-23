@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const UserList = () => {
-  const { data: users, isLoading, error } = useQuery({
+  const { data: users, isLoading, error } = useQuery<{ id: number; username: string; walletAddress: string }[]>({
     queryKey: ["users"],
     queryFn: async () => {
       const response = await fetch("/api/users");
@@ -25,7 +25,7 @@ const UserList = () => {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
+        {users?.map((user: { id: number; username: string; walletAddress: string }) => (
           <tr key={user.id}>
             <td className="border px-4 py-2">{user.id}</td>
             <td className="border px-4 py-2">{user.username}</td>

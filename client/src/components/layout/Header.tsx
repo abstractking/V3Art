@@ -44,6 +44,14 @@ const Header = () => {
     });
   };
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = e.target as HTMLAnchorElement;
+    if (!target.href.startsWith(window.location.origin)) return;
+  
+    e.preventDefault();
+    window.open(target.href, '_blank');
+  };
+
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Explore', href: '/explore' },
@@ -59,6 +67,15 @@ const Header = () => {
     if (path === '/' && location === '/') return true;
     if (path !== '/' && location.startsWith(path)) return true;
     return false;
+  };
+
+  const connectionError: Error | string | null = isConnected ? null : "Connection error";
+
+  const getErrorMessage = (error: Error | string | null): string => {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return error || "An unexpected error occurred";
   };
 
   return (
@@ -195,10 +212,7 @@ const Header = () => {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="block px-3 py-2 rounded-md text-base font-medium cursor-pointer text-muted-foreground hover:bg-secondary"
-                onClick={(e) => {
-                  if (!e.target.href.startsWith(window.location.origin)) return;
-                  setMobileMenuOpen(false);
-                }}
+                onClick={handleLinkClick}
               >
                 GitDoc
               </a>
@@ -208,14 +222,14 @@ const Header = () => {
       )}
 
       {/* Display error if any */}
-      {error && (
+      {connectionError && (
         <div className="bg-destructive/10 border-l-4 border-destructive p-4">
           <div className="flex">
             <div className="flex-shrink-0">
               <AlertCircle className="h-5 w-5 text-destructive" />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-destructive">{error.message || "An unexpected error occurred"}</p>
+              <p className="text-sm text-destructive">{getErrorMessage(connectionError)}</p>
             </div>
           </div>
         </div>

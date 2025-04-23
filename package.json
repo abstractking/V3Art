@@ -4,9 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
+    "dev": "nodemon --watch './**/*.ts' --exec 'node --loader ts-node/esm server/index.ts'",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "start": "vite preview"
+    "start": "TS_NODE_PROJECT=tsconfig.json node --loader ts-node/esm server/index.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.1",
@@ -96,8 +96,9 @@
     "esbuild": "^0.25.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.1",
-    "typescript": "5.6.3",
+    "typescript": "^5.6.3",
     "vite": "^5.4.14"
   },
   "optionalDependencies": {

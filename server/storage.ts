@@ -1,10 +1,69 @@
+console.log("Initializing in-memory storage...");
+
 import { 
-  users, type User, type InsertUser,
-  artists, type Artist, type InsertArtist,
-  artworks, type Artwork, type InsertArtwork,
-  artworkSubmissions, type ArtworkSubmission, type InsertArtworkSubmission,
-  nftSubmissions, type NftSubmission, type InsertNftSubmission
-} from "@shared/schema";
+  users, 
+  artworks, 
+  artworkSubmissions, 
+  nftSubmissions, 
+  type InsertUser,
+  type InsertArtist,
+  type InsertArtwork,
+  type InsertArtworkSubmission,
+  type InsertNftSubmission
+} from "../shared/schema.ts";
+
+interface User {
+  id: number;
+  walletAddress: string | null;
+  username: string;
+}
+
+interface Artist {
+  id: number;
+  walletAddress: string;
+  name: string;
+  biography: string | null;
+  profileImage: string | null;
+  coverImage: string | null;
+  userId: number | null;
+  artworkCount: number | null;
+  likesCount: number | null;
+}
+
+interface Artwork {
+  id: number;
+  title: string;
+  description: string | null;
+  imageUrl: string;
+  category: string;
+  price: number | null;
+  tokenId: string | null;
+  artistId: number;
+  createdAt: Date | null;
+  isApproved: boolean | null;
+}
+
+interface ArtworkSubmission {
+  id: number;
+  title: string;
+  description: string | null;
+  walletAddress: string | null;
+  status: string | null;
+  category: string;
+  price: number | null;
+  createdAt: Date | null;
+  artistName: string;
+  artistEmail: string;
+  imageFileName: string | null;
+}
+
+interface NftSubmission {
+  id: number;
+  status: string;
+  createdAt: Date;
+  walletAddress: string;
+  tokenId: string;
+}
 
 export interface IStorage {
   // User methods
@@ -14,6 +73,7 @@ export interface IStorage {
   logWalletLogin(walletAddress: string): void;
   getLoggedInWallets(): string[];
   getOrCreateUserByWallet(walletAddress: string): Promise<User>;
+  getUsers(limit?: number): Promise<User[]>;
 
   // Artist methods
   getArtist(id: number): Promise<Artist | undefined>;
@@ -54,6 +114,7 @@ export class MemStorage implements IStorage {
   private nftSubmissionId: number;
 
   constructor() {
+    console.log("MemStorage constructor called");
     this.users = new Map();
     this.artists = new Map();
     this.artworks = new Map();
@@ -66,8 +127,9 @@ export class MemStorage implements IStorage {
     this.submissionId = 1;
     this.nftSubmissionId = 1;
 
-    // Initialize with sample data
+    console.log("Initializing sample data...");
     this.initializeSampleData();
+    console.log("Sample data initialized.");
   }
 
   // User methods
@@ -83,7 +145,7 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userId++;
-    const user: User = { ...insertUser, id };
+    const user: User = { ...insertUser, id, walletAddress: insertUser.walletAddress || null };
     this.users.set(id, user);
     return user;
   }
@@ -110,6 +172,11 @@ export class MemStorage implements IStorage {
     return user;
   }
 
+  getUsers(limit?: number): Promise<User[]> {
+    const allUsers = Array.from(this.users.values());
+    return Promise.resolve(limit ? allUsers.slice(0, limit) : allUsers);
+  }
+
   // Artist methods
   async getArtist(id: number): Promise<Artist | undefined> {
     return this.artists.get(id);
@@ -128,11 +195,15 @@ export class MemStorage implements IStorage {
 
   async createArtist(insertArtist: InsertArtist): Promise<Artist> {
     const id = this.artistId++;
-    const artist: Artist = { 
-      ...insertArtist, 
+    const artist: Artist = {
+      ...insertArtist,
       id,
-      artworkCount: 0,
-      likesCount: 0
+      biography: insertArtist.biography ?? null, // Explicitly set to null if undefined
+      profileImage: insertArtist.profileImage ?? null,
+      coverImage: insertArtist.coverImage ?? null,
+      userId: insertArtist.userId ?? null,
+      artworkCount: insertArtist.artworkCount ?? 0,
+      likesCount: insertArtist.likesCount ?? 0,
     };
     this.artists.set(id, artist);
     return artist;
@@ -157,11 +228,14 @@ export class MemStorage implements IStorage {
 
   async createArtwork(insertArtwork: InsertArtwork): Promise<Artwork> {
     const id = this.artworkId++;
-    const artwork: Artwork = { 
-      ...insertArtwork, 
+    const artwork: Artwork = {
+      ...insertArtwork,
       id,
-      createdAt: new Date(),
-      isApproved: true
+      description: insertArtwork.description ?? null, // Explicitly set to null if undefined
+      price: insertArtwork.price ?? null,
+      tokenId: insertArtwork.tokenId ?? null,
+      createdAt: insertArtwork.createdAt ?? new Date(),
+      isApproved: insertArtwork.isApproved ?? false,
     };
     this.artworks.set(id, artwork);
     
@@ -178,11 +252,18 @@ export class MemStorage implements IStorage {
   // Artwork Submission methods
   async submitArtwork(insertSubmission: InsertArtworkSubmission): Promise<ArtworkSubmission> {
     const id = this.submissionId++;
-    const submission: ArtworkSubmission = { 
-      ...insertSubmission, 
+    const submission: ArtworkSubmission = {
+      ...insertSubmission,
       id,
+      description: insertSubmission.description || null,
+      walletAddress: insertSubmission.walletAddress || null,
       status: "pending",
-      createdAt: new Date()
+      category: insertSubmission.category,
+      price: insertSubmission.price || null,
+      createdAt: new Date(),
+      artistName: insertSubmission.artistName,
+      artistEmail: insertSubmission.artistEmail,
+      imageFileName: insertSubmission.imageFileName || null,
     };
     this.submissions.set(id, submission);
     return submission;
@@ -218,7 +299,8 @@ export class MemStorage implements IStorage {
       ...insertSubmission, 
       id,
       status: "pending",
-      createdAt: new Date()
+      createdAt: new Date(),
+      tokenId: insertSubmission.tokenId || "unknown",
     };
     this.nftSubmissions.set(id, submission);
     return submission;
@@ -287,8 +369,12 @@ export class MemStorage implements IStorage {
       const createdArtist = {
         ...artist,
         id: this.artistId++,
-        artworkCount: 0,
-        likesCount: 0,
+        biography: artist.biography ?? null, // Ensure default value is applied
+        profileImage: artist.profileImage ?? null,
+        coverImage: artist.coverImage ?? null,
+        userId: artist.userId ?? null,
+        artworkCount: artist.artworkCount ?? 0,
+        likesCount: artist.likesCount ?? 0,
       };
       this.artists.set(createdArtist.id, createdArtist);
       createdArtists.push(createdArtist);
@@ -330,6 +416,8 @@ export class MemStorage implements IStorage {
       const createdArtwork = {
         ...artwork,
         id: this.artworkId++,
+        price: artwork.price ?? null, // Ensure default value is applied
+        description: artwork.description ?? null, // Ensure default value is applied
         createdAt: new Date(),
         isApproved: true,
       };
