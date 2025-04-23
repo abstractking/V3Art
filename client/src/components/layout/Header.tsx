@@ -49,6 +49,7 @@ const Header = () => {
     { name: 'Explore', href: '/explore' },
     { name: 'Submit', href: '/submit' },
     { name: 'Artists', href: '/artists' },
+    { name: 'Profile', href: '/profile' },
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Admin', href: '/admin' },
     { name: 'About', href: '/about' },

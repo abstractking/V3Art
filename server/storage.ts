@@ -11,25 +11,27 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+  logWalletLogin(walletAddress: string): void;
+  getLoggedInWallets(): string[];
+
   // Artist methods
   getArtist(id: number): Promise<Artist | undefined>;
   getArtistByWalletAddress(walletAddress: string): Promise<Artist | undefined>;
   getArtists(limit?: number): Promise<Artist[]>;
   createArtist(artist: InsertArtist): Promise<Artist>;
-  
+
   // Artwork methods
   getArtwork(id: number): Promise<Artwork | undefined>;
   getArtworksByArtistId(artistId: number): Promise<Artwork[]>;
   getArtworks(limit?: number): Promise<Artwork[]>;
   createArtwork(artwork: InsertArtwork): Promise<Artwork>;
-  
+
   // Artwork Submission methods
   submitArtwork(submission: InsertArtworkSubmission): Promise<ArtworkSubmission>;
   getSubmission(id: number): Promise<ArtworkSubmission | undefined>;
   getAllSubmissions(): Promise<ArtworkSubmission[]>;
   updateSubmissionStatus(id: number, status: string): Promise<ArtworkSubmission>;
-  
+
   // NFT Submission methods
   submitNft(submission: InsertNftSubmission): Promise<NftSubmission>;
   getNftSubmission(id: number): Promise<NftSubmission | undefined>;
@@ -43,6 +45,7 @@ export class MemStorage implements IStorage {
   private artworks: Map<number, Artwork>;
   private submissions: Map<number, ArtworkSubmission>;
   private nftSubmissions: Map<number, NftSubmission>;
+  private loggedInWallets: Set<string>; // Track logged-in wallets
   private userId: number;
   private artistId: number;
   private artworkId: number;
@@ -55,6 +58,7 @@ export class MemStorage implements IStorage {
     this.artworks = new Map();
     this.submissions = new Map();
     this.nftSubmissions = new Map();
+    this.loggedInWallets = new Set(); // Initialize the wallet tracker
     this.userId = 1;
     this.artistId = 1;
     this.artworkId = 1;
@@ -81,6 +85,14 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+
+  logWalletLogin(walletAddress: string): void {
+    this.loggedInWallets.add(walletAddress); // Add the wallet address to the set
+  }
+
+  getLoggedInWallets(): string[] {
+    return Array.from(this.loggedInWallets); // Return all logged-in wallets
   }
 
   // Artist methods
